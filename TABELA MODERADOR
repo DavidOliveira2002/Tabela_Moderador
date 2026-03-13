@@ -1,0 +1,89 @@
+-- =============================================================================
+-- banco.sql
+-- Estrutura básica + strings de moderação para sistema de chat / fórum / rede social
+-- Criado em: 13 de março em 2026
+-- Compatibilidade pretendida: MySQL 8+ / MariaDB 10.6+
+-- ==============================================================================
+
+-- -----------------------------------------------------------------------------
+-- Tabela principal de strings/mensagens do sistema de moderação
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS moderador_strings (
+    id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    
+    chave           VARCHAR(120) NOT NULL COMMENT 'Identificador interno único (usado no código)',
+    texto           TEXT         NOT NULL COMMENT 'Mensagem exibida para o usuário ou log',
+    
+    tipo            ENUM(
+        'aviso',
+        'kick',
+        'temp_ban',
+        'perm_ban',
+        'mute',
+        'remocao_conteudo',
+        'outros'
+    ) NOT NULL DEFAULT 'outros',
+    
+    contexto        VARCHAR(100)          DEFAULT NULL COMMENT 'chat, perfil, post, comentário, etc.',
+    severidade      TINYINT UNSIGNED      DEFAULT 3   COMMENT '1 = leve ... 5 = gravíssimo',
+    
+    ativo           BOOLEAN               DEFAULT TRUE,
+    criado_em       DATETIME              DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em   DATETIME              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (id),
+    UNIQUE  KEY uk_chave (chave),
+    INDEX       idx_tipo_contexto (tipo, contexto),
+    INDEX       idx_ativo             (ativo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Mensagens e strings usadas pelo sistema de moderação';
+
+
+-- -----------------------------------------------------------------------------
+-- Dados iniciais - strings que apareceram na conversa
+-- -----------------------------------------------------------------------------
+INSERT INTO moderador_strings 
+    (chave, texto, tipo, contexto, severidade, ativo) 
+VALUES
+    -- Área de atuação / cargo / especialidade do moderador
+    ('area_atuacao', 
+     '+String area_atuacao', 
+     'outros', 'perfil', 1, TRUE),
+
+    -- Comando / ação de moderar o chat
+    ('moderar_chat', 
+     '+moderar_chat()', 
+     'outros', 'chat', 2, TRUE),
+
+    -- Banimento de usuário
+    ('banir_usuario', 
+     '+banir_usuario()', 
+     'perm_ban', 'usuário', 5, TRUE),
+
+    -- Remoção de conteúdo (post, comentário, mídia, etc)
+    ('remover_conteudo', 
+     '+remover_conteudo()', 
+     'remocao_conteudo', 'conteúdo', 4, TRUE);
+
+
+-- -----------------------------------------------------------------------------
+-- Exemplos adicionais úteis (comente / descomente conforme necessidade)
+-- -----------------------------------------------------------------------------
+
+/*
+INSERT INTO moderador_strings 
+    (chave, texto, tipo, contexto, severidade) VALUES
+    ('aviso_spam',               'Conteúdo considerado spam. Mensagem removida.',               'remocao_conteudo', 'chat', 3),
+    ('aviso_ofensa',             'Mensagem contendo ofensas / discurso de ódio removida.',      'remocao_conteudo', 'chat', 4),
+    ('mute_temporario_1h',       'Você foi silenciado por 1 hora por comportamento inadequado.', 'mute', 'usuário', 3),
+    ('ban_temp_7d_flood',        'Ban temporário de 7 dias por flood / mensagens repetidas.',   'temp_ban', 'usuário', 4),
+    ('ban_permanente_multiplas', 'Ban permanente por múltiplas violações graves.',             'perm_ban', 'usuário', 5);
+*/
+
+
+-- -----------------------------------------------------------------------------
+-- Finalização
+-- -----------------------------------------------------------------------------
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- Última linha intencionalmente em branco para facilitar appends futuros
