@@ -1,0 +1,28 @@
+class AreaEventoRequest {
+    constructor(areaAtuacaoId, titulo, descricao, dataEvento, local, ativo = true) {
+        this.areaAtuacaoId = areaAtuacaoId;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.dataEvento = dataEvento;
+        this.local = local;
+        this.ativo = ativo;
+    }
+}
+
+class AreaEventoResponse {
+    constructor(id, areaAtuacaoId, titulo, descricao, dataEvento, local, ativo, criadoEm) {
+        this.id = id;
+        this.areaAtuacaoId = areaAtuacaoId;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.dataEvento = dataEvento;
+        this.local = local;
+        this.ativo = ativo;
+        this.criadoEm = criadoEm;
+    }
+}
+
+module.exports = {
+    AreaEventoRequest,
+    AreaEventoResponse
+};
