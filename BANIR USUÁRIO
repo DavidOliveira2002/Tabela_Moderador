@@ -1,0 +1,24 @@
+class BanimentoRequest {
+    constructor(moderadorId, usuarioId, motivo, duracaoDias = null) {
+        this.moderadorId = moderadorId;
+        this.usuarioId = usuarioId;
+        this.motivo = motivo;
+        this.duracaoDias = duracaoDias;
+    }
+}
+
+class BanimentoResponse {
+    constructor(moderadorId, usuarioId, status, motivo, duracaoDias, dataBanimento) {
+        this.moderadorId = moderadorId;
+        this.usuarioId = usuarioId;
+        this.status = status;
+        this.motivo = motivo;
+        this.duracaoDias = duracaoDias;
+        this.dataBanimento = dataBanimento;
+    }
+}
+
+module.exports = {
+    BanimentoRequest,
+    BanimentoResponse
+};
