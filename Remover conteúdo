@@ -1,0 +1,22 @@
+class ModeracaoRequest {
+    constructor(moderadorId, conteudoId, motivo) {
+        this.moderadorId = moderadorId;
+        this.conteudoId = conteudoId;
+        this.motivo = motivo;
+    }
+}
+
+class ModeracaoResponse {
+    constructor(moderadorId, conteudoId, status, motivo, dataAcao) {
+        this.moderadorId = moderadorId;
+        this.conteudoId = conteudoId;
+        this.status = status;
+        this.motivo = motivo;
+        this.dataAcao = dataAcao;
+    }
+}
+
+module.exports = {
+    ModeracaoRequest,
+    ModeracaoResponse
+};
